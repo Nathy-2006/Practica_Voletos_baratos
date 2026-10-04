@@ -1,0 +1,87 @@
+Grafico guardado en grafo_vuelos.png
+DEMO - Practica #04: Buscador de vuelos baratos (Dijkstra)
+Base de datos cargada: 14 aeropuertos, 60 vuelos
+
+COD  CIUDAD               SALIDAS  LLEGADAS
+-------------------------------------------
+BOG  Bogota                     7         7
+CUE  Cuenca                     2         2
+GPS  Galapagos                  2         2
+GYE  Guayaquil                  8         8
+LIM  Lima                       5         5
+LOH  Loja                       1         1
+MAD  Madrid                     5         5
+MCH  Machala                    2         2
+MDE  Medellin                   2         2
+MEX  Ciudad de Mexico           3         3
+MIA  Miami                      5         5
+PTY  Panama                     6         6
+SCL  Santiago                   2         2
+UIO  Quito                     10        10
+
+Vuelos directos desde MCH (Machala):
+DESTINO     PRECIO   MIN  AEROLINEA
+GYE          38.00    40  AeroAndes
+UIO          72.00    55  AeroAndes
+
+Matriz de adyacencia (precio USD, '-' = sin vuelo directo):
+          MCH    GYE    UIO    BOG    PTY    MIA
+MCH         -     38     72      -      -      -
+GYE        41      -     58    135    150    320
+UIO        75     55      -    118    165    300
+BOG         -    138    121      -     92      -
+PTY         -    155    168     95      -    130
+MIA         -    325    305      -    133      -
+
+[MCH -> MAD] Ruta mas BARATA (Dijkstra, 0.027 ms, 14 nodos expandidos)
+  MCH -> GYE  $  38.00   40 min  AeroAndes
+  GYE -> BOG  $ 135.00  110 min  CondorJet
+  BOG -> MAD  $ 520.00  540 min  IberoAndes
+  TOTAL: 693 USD | Escalas: 2
+
+[MCH -> MAD] Ruta mas RAPIDA (Dijkstra por duracion)
+  MCH -> UIO  $  72.00   55 min  AeroAndes
+  UIO -> MAD  $ 780.00  610 min  IberoAndes
+  TOTAL: 665 min | Escalas: 1
+
+[MCH -> MAD] Menos escalas (BFS)
+  MCH -> UIO  $  72.00   55 min  AeroAndes
+  UIO -> MAD  $ 780.00  610 min  IberoAndes
+  TOTAL: 852 USD | Escalas: 1
+
+[GYE -> MIA] Ruta mas BARATA (Dijkstra, 0.016 ms, 12 nodos expandidos)
+  GYE -> PTY  $ 150.00  130 min  PanAmeriJet
+  PTY -> MIA  $ 130.00  190 min  PanAmeriJet
+  TOTAL: 280 USD | Escalas: 1
+
+[GYE -> MIA] Ruta mas RAPIDA (Dijkstra por duracion)
+  GYE -> MIA  $ 320.00  270 min  PanAmeriJet
+  TOTAL: 270 min | Escalas: 0
+
+[GYE -> MIA] Menos escalas (BFS)
+  GYE -> MIA  $ 320.00  270 min  PanAmeriJet
+  TOTAL: 320 USD | Escalas: 0
+  (Vuelo directo existente: $320.00; ahorro con escalas: $40.00)
+
+[UIO -> MAD] Ruta mas BARATA (Dijkstra, 0.015 ms, 14 nodos expandidos)
+  UIO -> BOG  $ 118.00   95 min  CondorJet
+  BOG -> MAD  $ 520.00  540 min  IberoAndes
+  TOTAL: 638 USD | Escalas: 1
+
+[UIO -> MAD] Ruta mas RAPIDA (Dijkstra por duracion)
+  UIO -> MAD  $ 780.00  610 min  IberoAndes
+  TOTAL: 610 min | Escalas: 0
+
+[UIO -> MAD] Menos escalas (BFS)
+  UIO -> MAD  $ 780.00  610 min  IberoAndes
+  TOTAL: 780 USD | Escalas: 0
+  (Vuelo directo existente: $780.00; ahorro con escalas: $142.00)
+
+Verificacion Dijkstra(heap) == Dijkstra(arreglo) en todos los pares: True
+
+BENCHMARK (grafos aleatorios, 5 vuelos por aeropuerto)
+     V       E   Heap (ms)  Arreglo (ms)  Speed-up
+   100     496       0.080         0.211      2.6x
+   400    1996       0.179         1.391      7.8x
+  1600    7991       3.187        66.231     20.8x
+  3200   15996       3.148       143.850     45.7x
